@@ -1,0 +1,54 @@
+.profile-headers{
+    display : flex;
+    flex-direction: row;
+    column-gap: 2rem;
+    .user-image{
+        width: 60px;
+        height : 60px;
+        > img{
+            width: 100%;
+            height : 100%;
+        }
+    }
+    .arrow{
+        position: absolute;
+        margin-top: 18px;
+        margin-left: 60px;
+        width: 0;
+        height: 0;
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+        border-right: 10px solid #336291;
+        z-index: 1;
+    }
+    .user-info{
+        padding: 0 16px 0 9px;
+    background: rgba(0,0,0,0.6);
+    border: 4px solid #336291;
+    border-radius: 4px;
+    margin-left: 90px;
+    position: absolute;
+    right: 0;
+    left: 0;
+    color: #fff;
+    height : 60px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.75);
+        display: flex;
+        flex : 1;
+        align-items: center;
+        .username{
+            flex-grow : 1
+        }
+        .user-earned-trophies{
+            flex-shrink: 0;
+        }
+    }
+}
+
+.game-anchor{
+    text-decoration: underline;
+    color : #FFF;
+    &:hover{
+        color : #e4e4e2;
+    }
+}
