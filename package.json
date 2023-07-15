@@ -5,6 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev":"pnpm run --parallel dev",
+    "install-frontend" : "pnpm install --filter=frontend",
+    "install-server" : "pnpm install --filter=server",
+    "install-all": "npm run install-frontend && npm run install-server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
