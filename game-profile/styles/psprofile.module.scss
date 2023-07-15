@@ -1,0 +1,23 @@
+
+.icon-container{
+        column-gap: 1rem;
+        align-items: baseline;
+        display: flex;
+}
+
+.game-container{
+        display : flex;
+        flex-wrap: wrap;
+        column-gap: 1.5rem;
+        row-gap : 1.5rem;
+        > *{
+                flex : 1 0 21%
+        }
+        .recent-play > div > div{
+                background-size : contain;
+        }
+}
+
+.media{
+        background-size : contain;
+}
