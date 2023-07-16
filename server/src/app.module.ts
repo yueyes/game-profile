@@ -2,12 +2,28 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 // import { TrpcModule } from '@server/trpc/trpc.module';
-import { UserModule } from './server/user/user.module';
-import { MongooseModule } from '@nestjs/mongoose';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './user/user.entity';
+import { UserController } from './user/user.controller';
+import { UserModule } from './user/user.module';
+import { UserService } from './user/user.service';
 
 @Module({
-  imports: [MongooseModule.forRoot('mongodb://127.0.0.1:27017/GameProfile'),UserModule],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [TypeOrmModule.forRoot({
+    type : "mariadb",
+    host : "127.0.0.1",
+    port : 3306,
+    username : "root",
+    password : 'root',
+    database : 'gameprofiles',
+    entities: [User],
+    synchronize : true,
+    retryAttempts : 100,
+    retryDelay : 2000,
+    autoLoadEntities : false,
+    logging : true,
+  }),UserModule],
+  controllers: [AppController,UserController],
+  providers: [AppService,UserService],
 })
 export class AppModule {}

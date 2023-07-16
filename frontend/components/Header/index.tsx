@@ -4,6 +4,7 @@ import styles from '../../styles/Header.module.scss';
 import Link from '@mui/material/Link';
 import Profile from '../../assets/profile-logo.png';
 import Image from 'next/image';
+import { Button } from '@mui/material';
 
 interface IProps{
     sections: Array<{
@@ -43,6 +44,16 @@ function Header(props:IProps) {
           <Button variant="outlined" size="small">
             Sign up
           </Button> */}
+          <div style={{
+    columnGap: "1rem",
+    display:"flex",
+    position : "absolute",
+    right : 0
+}}><span><Button variant="contained" size="small">
+Login
+</Button></span><span><Button variant="outlined" size="small">
+Register
+</Button></span></div>
         </Toolbar>
         {/* <Toolbar
           component="nav"
