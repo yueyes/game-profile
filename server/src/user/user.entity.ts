@@ -1,4 +1,5 @@
-import {Entity,Column,PrimaryGeneratedColumn, Index} from 'typeorm';
+import { Psnuser } from '@server/psnuser/psnuser.entity';
+import {Entity,Column,PrimaryGeneratedColumn, Index, OneToMany, Raw} from 'typeorm';
 
 @Entity()
 @Index('user_email_uindex', ['email'], {unique: true})
@@ -17,8 +18,17 @@ export class User{
     @Column({type : 'varchar',length : 255})
     email : string;
 
-    @Column({type : "text"})
-    token: string;
+    @Column({type : "json"})
+    password: {
+        salt : string;
+        hash : string;
+    }
+
+    @OneToMany(() => Psnuser, psnUser => psnUser.user)
+    psnUser: Psnuser[];  
+
+    @Column({type : 'bool', default: true})
+    isPrivate : boolean;
 
     @Column({type : 'timestamp',default : () => "CURRENT_TIMESTAMP"})
     createdAt : Date;

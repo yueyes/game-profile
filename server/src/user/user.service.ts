@@ -11,16 +11,26 @@ export class UserService {
         private userRepository: Repository<User>,
     ){}
 
+findOne({username}:{username:string}) : Promise<User|null>{
+    return this.userRepository.findOne({where:{
+        username
+    }})
+}
+
 findAll(): Promise<User[]> {
     return this.userRepository.find()
 }
 
-createUser(userData : {username:string,email : string,userToken : string,name : string}) : Promise<User>{
+createUser(userData : {username:string,email : string,userToken : string,salt : string,name : string,isPrivate:boolean}) : Promise<User>{
     const newUser = new User();
     newUser.username = userData.username;
     newUser.email = userData.email;
-    newUser.token = userData.userToken;
+    newUser.password = {
+        hash : userData.userToken,
+        salt : userData.salt
+    };
     newUser.name = userData.username;
+    newUser.isPrivate = userData.isPrivate;
     return this.userRepository.save(newUser);
 }
 
