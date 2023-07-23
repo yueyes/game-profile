@@ -15,7 +15,8 @@ import GoldIcon from '../assets/icons/40-gold.png';
 import SilverIcon from '../assets/icons/40-silver.png';
 import BronzeIcon from '../assets/icons/40-bronze.png';
 import { IUserData } from './api/getUserData';
-import moment from 'moment';
+import { Modal } from '@mui/material';
+import MemberModal from '@frontend/components/MemberModal';
 
 const sections = [
   { title: 'Dashboard', url: '#' },
@@ -74,6 +75,7 @@ interface IData{
 const Home: NextPage = () => {
   const [data,setData] = useState<IData[]>([]);
   const [user,setUser] = useState<IUserData | null>(null);
+  const [isOpenLogin,setIsOpenLogin] = useState(false);
 
   const getData = async()=>{
       const res = await getTrophies();
@@ -101,7 +103,10 @@ const Home: NextPage = () => {
   return (
     <div className={styles.container}>
       <Container maxWidth="lg">
-        <Header title="Blog" sections={sections} />
+        <Header title="Blog" sections={sections} setIsOpenLogin={setIsOpenLogin} />
+        <Modal open={isOpenLogin} onClose={()=>{setIsOpenLogin(false)}}>
+          <MemberModal />
+        </Modal>
         <main>
           <MainFeaturedGame   userDetails={user!} post={ data.length > 0?{
   title: '最近遊玩的遊戲',

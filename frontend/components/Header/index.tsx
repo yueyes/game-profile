@@ -5,6 +5,7 @@ import Link from '@mui/material/Link';
 import Profile from '../../assets/profile-logo.png';
 import Image from 'next/image';
 import { Button } from '@mui/material';
+import { Dispatch, SetStateAction } from 'react';
 
 interface IProps{
     sections: Array<{
@@ -12,10 +13,11 @@ interface IProps{
         url : string;
     }>;
     title : string;
+    setIsOpenLogin : Dispatch<SetStateAction<boolean>>;
 }
 
 function Header(props:IProps) {
-    const { sections, title } = props;
+    const { sections,setIsOpenLogin } = props;
   
     return (
       <>
@@ -49,7 +51,7 @@ function Header(props:IProps) {
     display:"flex",
     position : "absolute",
     right : 0
-}}><span><Button variant="contained" size="small">
+}}><span><Button variant="contained" size="small" onClick={()=>setIsOpenLogin(true)}>
 Login
 </Button></span><span><Button variant="outlined" size="small">
 Register
