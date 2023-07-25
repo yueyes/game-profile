@@ -15,7 +15,7 @@ const boxStyle = {
     boxShadow: 24,
     p: 4,
   };
-  const paperStyle ={ padding : 20,height:"47vh",width : 500,margin:"20px auto",    position: 'absolute' as 'absolute',
+  const paperStyle ={ padding : 20,height:"80vh",width : 500,margin:"20px auto",    position: 'absolute' as 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',}

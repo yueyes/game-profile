@@ -15,10 +15,10 @@ import { AuthModule } from './auth/auth.module';
   imports: [TypeOrmModule.forRoot({
     type : "mariadb",
     host : "127.0.0.1",
-    port : 3306,
+    port : 13306,
     username : "root",
     password : 'root',
-    database : 'gameprofiles',
+    database : 'gameProfiles',
     entities: [User,Psnuser],
     synchronize : true,
     retryAttempts : 100,

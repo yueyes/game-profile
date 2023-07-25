@@ -12,7 +12,7 @@ interface IUser{
     username : string;
     email : string;
     password : string;
-    repassword : string;
+    rePassword : string;
     name : string;
     isPrivate : boolean;
     psnUsername:string;
@@ -81,15 +81,15 @@ password);
     async createUser(@Body() body: IUser): Promise<any> {
         try{
 
-            const {username,email,password,repassword,name,psnUsername,psnDisplayName,isPrivate=true} = body;
+            const {username,email,password,rePassword,name,psnUsername,psnDisplayName,isPrivate=true} = body;
             console.log("body : ",body);
-            if(password !== repassword){
+            if(password !== rePassword){
               return{
                 code : 400,
                 message : "Password not correct!"
               }
             }
-            const user =await this.userService.findOne({username});
+            const user = await this.userService.findOne({username});
             if(user){
               return {
                 code:400,
@@ -101,7 +101,10 @@ password);
             console.log(token);
             const res =  await this.userService.createUser({username,email,userToken:token,salt,name,isPrivate})
             const {id,...rest} = res;
-            await this.psnuserService.createUser({userId: id,username:psnUsername,displayName:psnDisplayName})
+            if(psnUsername){
+              await this.psnuserService.createUser({userId: id,username:psnUsername,displayName:psnDisplayName})
+            }
+            // await this.psnuserService.createUser({userId: id,username:psnUsername,displayName:psnDisplayName})
             return rest;
           }catch(err){
             console.log(err);
