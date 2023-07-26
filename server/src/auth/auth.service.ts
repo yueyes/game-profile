@@ -55,10 +55,17 @@ export class AuthService {
         console.log('JWT auth-step 3：Handle jwt signature');
         try {
             const token = this.jwtService.sign(payload);
+            const {id,...rest} = user;
             return {
                 code:200,
                 data:{
-                    token
+                    token,
+                    user : {
+                        email : user.email,
+                        username : user.username,
+                        displayName : user.name,
+                        isPrivate : user.isPrivate
+                    }
                 },
                 msg:'Login Success'
             }

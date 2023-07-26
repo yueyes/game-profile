@@ -4,8 +4,12 @@ import styles from '../../styles/Header.module.scss';
 import Link from '@mui/material/Link';
 import Profile from '../../assets/profile-logo.png';
 import Image from 'next/image';
-import { Button } from '@mui/material';
-import { Dispatch, SetStateAction } from 'react';
+import { Avatar, Button, Menu, MenuItem, Tooltip, Typography } from '@mui/material';
+import { Dispatch, SetStateAction, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { getIsLoggedIn } from '@frontend/store/authSlice';
+import { deepOrange } from '@mui/material/colors';
+import { getUserInfo } from '@frontend/store/userSlice';
 
 interface IProps{
     sections: Array<{
@@ -16,8 +20,18 @@ interface IProps{
     setIsOpenLogin : Dispatch<SetStateAction<boolean>>;
 }
 
+const settings = ['Profile','Account','Dashboard','Logout']
+
 function Header(props:IProps) {
+  const isLoggedIn = useSelector(getIsLoggedIn);
+  const user = useSelector(getUserInfo);
     const { sections,setIsOpenLogin } = props;
+    const [anchorElUser,setAnchorElUser] = useState<null | HTMLElement>(null);
+    const handleOpenUserMenu = (event:React.MouseEvent<HTMLElement>) => {
+      setAnchorElUser(event.currentTarget);
+    }
+    const handleCloseUserMenu = () => setAnchorElUser(null);
+    console.log(user);
   
     return (
       <>
@@ -51,11 +65,48 @@ function Header(props:IProps) {
     display:"flex",
     position : "absolute",
     right : 0
-}}><span><Button variant="contained" size="small" onClick={()=>setIsOpenLogin(true)}>
+}}>
+  {
+    !isLoggedIn && <>
+        <span><Button variant="contained" size="small" onClick={()=>setIsOpenLogin(true)}>
 Login
 </Button></span><span><Button variant="outlined" size="small">
 Register
-</Button></span></div>
+</Button></span>
+    </>
+  }
+  { isLoggedIn && <>
+
+    <Tooltip title="settings">
+      <Avatar sx={{bgColor : deepOrange[500]}} onClick={handleOpenUserMenu}>{user.displayName[0].toUpperCase()}</Avatar>
+    </Tooltip>
+    <Menu
+    sx ={{mt : '45px'}}
+    id="menu-appbar"
+    anchorEl={anchorElUser}
+    anchorOrigin={{
+      vertical : 'top',
+      horizontal: 'right'
+    }}
+    keepMounted
+    transformOrigin={{
+      vertical : 'top',
+      horizontal: 'right'
+    }}
+    open={!!anchorElUser}
+    onClose={handleCloseUserMenu}
+    >
+      {
+        settings.map((setting)=>(
+          <MenuItem key={setting} onClick={handleCloseUserMenu}>
+            <Typography textAlign="center">{setting}</Typography>
+          </MenuItem>
+        ))
+      }
+    </Menu>
+
+  </>}
+</div>
         </Toolbar>
         {/* <Toolbar
           component="nav"

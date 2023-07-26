@@ -3,6 +3,10 @@ import {Avatar,Button, Checkbox, FormControlLabel, Grid,IconButton,Link,Paper, S
 import { IModalProps } from './interface';
 import { useState } from 'react';
 import { userRegister } from '@frontend/services/user';
+import { useAppDispatch } from '@frontend/hooks';
+import { useSelector } from 'react-redux';
+import { getIsLoading, setIsLoading } from '@frontend/store/loadingSlice';
+import { setIsLoggedIn } from '@frontend/store/authSlice';
 
 const avatarStyle = {backgroundColor : "#1bbd7e",margin : "0 auto"}
 const btnstyle={margin:'8px 0'}
@@ -19,12 +23,16 @@ const RegisterModal = ({setCurrentMode}:IModalProps) =>{
 
     const [registerErrMsg ,setRegisterErrMsg] = useState("")
 
+    const dispatch = useAppDispatch();
+    const isLoading = useSelector(getIsLoading);
+
     const handleRegister = async () => {
         if(password !== rePassword){
             setRegisterErrMsg("Password is not same. please check.");
             return;
         }
         try{
+            dispatch(setIsLoading(true));
             const payload = {
                 email,
                 username,
@@ -36,11 +44,15 @@ const RegisterModal = ({setCurrentMode}:IModalProps) =>{
             }
             console.log(payload);
             const res = await userRegister(payload);
+            if(res){
+                dispatch(setIsLoggedIn(true));
+            }
             console.log(res);
         }catch(err){
             console.debug(err);
         }finally{
-            // set is not loading
+            // TODO: set is not loading
+            dispatch(setIsLoading(false));
         }
     }
 

@@ -17,6 +17,9 @@ import BronzeIcon from '../assets/icons/40-bronze.png';
 import { IUserData } from './api/getUserData';
 import { Modal } from '@mui/material';
 import MemberModal from '@frontend/components/MemberModal';
+import { useSelector } from 'react-redux';
+import { getIsLoading } from '@frontend/store/loadingSlice';
+import { getIsLoggedIn } from '@frontend/store/authSlice';
 
 const sections = [
   { title: 'Dashboard', url: '#' },
@@ -76,6 +79,8 @@ const Home: NextPage = () => {
   const [data,setData] = useState<IData[]>([]);
   const [user,setUser] = useState<IUserData | null>(null);
   const [isOpenLogin,setIsOpenLogin] = useState(false);
+  const isLoading = useSelector(getIsLoading);
+  const isLoggedIn = useSelector(getIsLoggedIn);
 
   const getData = async()=>{
       const res = await getTrophies();
@@ -83,6 +88,12 @@ const Home: NextPage = () => {
       setData(res.data);
       setUser(user.data);
   }
+
+  useEffect(()=>{
+    if(isLoggedIn){
+      setIsOpenLogin(false);
+    }
+  },[isLoggedIn])
 
   useEffect(()=>{
       getData();

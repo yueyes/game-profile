@@ -18,7 +18,7 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     // Action to set the authentication status
-    setAuthState(state, action) {
+    setIsLoggedIn(state, action) {
       state.isLoggedIn = action.payload;
     },
   },
@@ -34,8 +34,8 @@ export const authSlice = createSlice({
   },
 });
 
-export const { setAuthState } = authSlice.actions;
+export const { setIsLoggedIn } = authSlice.actions;
 
-export const selectAuthState = (state: AppState) => state.auth.isLoggedIn;
+export const getIsLoggedIn = (state: AppState) => state.auth.isLoggedIn;
 
 export default authSlice.reducer;

@@ -3,18 +3,23 @@ import {Avatar,Button, Checkbox, FormControlLabel, Grid,Link,Paper, TextField, T
 import { IModalProps } from './interface';
 import { useState } from 'react';
 import { userLogin } from '@frontend/services/user';
+import { useAppDispatch } from '@frontend/hooks';
+import { setIsLoading } from '@frontend/store/loadingSlice';
+import { setIsLoggedIn } from '@frontend/store/authSlice';
+import { setUser } from '@frontend/store/userSlice';
 
 const avatarStyle = {backgroundColor : "#1bbd7e",margin : "0 auto"}
 const btnstyle={margin:'8px 0'}
 
 const LoginModal = ({setCurrentMode}:IModalProps) =>{
-
+    const dispatch = useAppDispatch();
     const [username,setUsername] = useState("");
     const [password,setPassword] = useState("");
     const [isRememberMe,setIsRememberMe] = useState(false);
 
     const handleLogin = async () => {
         try{
+            dispatch(setIsLoading(true));
             // setLoading
             const payload = {
                 username,
@@ -22,12 +27,18 @@ const LoginModal = ({setCurrentMode}:IModalProps) =>{
                 isRememberMe
             }
             const res = await userLogin(payload);
+            if(res){
+                console.log(res);
+                dispatch(setIsLoggedIn(true));
+                dispatch(setUser(res.data.data.user));
+            }
             // update isLoggedIn
             // 
         }catch(err){
             console.debug(err);
         }finally{
             // setIsNotLoading
+            dispatch(setIsLoading(false));
         }
     }
 

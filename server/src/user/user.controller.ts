@@ -105,7 +105,10 @@ password);
               await this.psnuserService.createUser({userId: id,username:psnUsername,displayName:psnDisplayName})
             }
             // await this.psnuserService.createUser({userId: id,username:psnUsername,displayName:psnDisplayName})
-            return rest;
+            return {                        email : res.email,
+              username : res.username,
+              displayName : res.name,
+              isPrivate : res.isPrivate};
           }catch(err){
             console.log(err);
             throw new Error(err);
