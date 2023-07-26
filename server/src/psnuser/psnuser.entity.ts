@@ -1,7 +1,7 @@
 import { User } from '@server/user/user.entity';
 import {Entity,Column,PrimaryGeneratedColumn, Index, JoinColumn, ManyToOne, CreateDateColumn, UpdateDateColumn} from 'typeorm';
 
-@Entity()
+@Entity({name:'psnuser'})
 @Index('psnuser_username_uindex', ['username'], {unique: true})
 @Index('psnuser_user_id_fk', ['userId'])
 export class Psnuser {

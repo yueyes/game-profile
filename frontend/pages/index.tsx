@@ -17,9 +17,16 @@ import BronzeIcon from '../assets/icons/40-bronze.png';
 import { IUserData } from './api/getUserData';
 import { Modal } from '@mui/material';
 import MemberModal from '@frontend/components/MemberModal';
-import { useSelector } from 'react-redux';
-import { getIsLoading } from '@frontend/store/loadingSlice';
-import { getIsLoggedIn } from '@frontend/store/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { getIsLoading, setIsLoading } from '@frontend/store/loadingSlice';
+import { getIsLoggedIn, setIsLoggedIn } from '@frontend/store/authSlice';
+import { getUserMe } from '@frontend/services/user';
+
+function getCookie(name:string) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop()!.split(';').shift();
+}
 
 const sections = [
   { title: 'Dashboard', url: '#' },
@@ -80,6 +87,7 @@ const Home: NextPage = () => {
   const [user,setUser] = useState<IUserData | null>(null);
   const [isOpenLogin,setIsOpenLogin] = useState(false);
   const isLoading = useSelector(getIsLoading);
+  const dispatch = useDispatch();
   const isLoggedIn = useSelector(getIsLoggedIn);
 
   const getData = async()=>{
@@ -97,6 +105,18 @@ const Home: NextPage = () => {
 
   useEffect(()=>{
       getData();
+  },[])
+
+  const getCurrentUser = async() => {
+    const user = await getUserMe();
+    console.log(user);
+  }
+
+  useEffect(()=>{
+      if(getCookie("user_token")){
+        dispatch(setIsLoggedIn(true));
+        getCurrentUser();
+      }
   },[])
 
   const posts = useMemo(()=>{

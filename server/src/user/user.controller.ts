@@ -1,10 +1,13 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Res, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
 import { PsnuserService } from '@server/psnuser/psnuser.service';
 import { encryptPassword, makeSalt } from '@server/utils/cryptogram';
 import { AuthService } from '@server/auth/auth.service';
 import { AuthGuard } from '@nestjs/passport';
+import { Response } from 'express';
+import { Userme } from './user.decorator';
+import { serialize } from 'cookie';
 
 const JWT_SECRET = "TestSECRET"
 
@@ -25,6 +28,12 @@ export class UserController {
         private readonly psnuserService : PsnuserService,
         private readonly authService : AuthService
     ){}
+
+    @UseGuards(AuthGuard('jwt'))
+    @Get("/me")
+    async getCurrentUser(@Userme() user:any){
+        console.log(user);
+    }
 
     @UseGuards(AuthGuard('jwt'))
     @Get("/users")
@@ -56,14 +65,27 @@ export class UserController {
 
     // JWT Auth - Step 1: Login
     @Post('/login')
-    async login(@Body() loginParmas:any){
+    async login(@Body() loginParmas:any,@Res({passthrough:true}) response:Response){
+      
         console.log('JWTAuth - Step 1: Login' , loginParmas);
         const authResult = await this.authService.validateUser(loginParmas.username,loginParmas.
 password);
           console.log(authResult);
         switch(authResult.code){
             case 1:
-                return this.authService.certificate(authResult.user);
+                // response.cookie("user_token",authResult.token);
+                const data = await this.authService.certificate(authResult.user)
+                console.log(data);
+                response.setHeader('Set-Cookie', serialize('user_token',data.data!.token, {
+                  httpOnly: true,
+                  sameSite: 'strict',
+                  maxAge: 7 * 24 * 60 * 60 * 1000
+                }))
+                // response.set('Access-Control-Allow-Origin', '*')
+                // response.set('Access-Control-Allow-Credentials', 'true')
+                // response.set('Access-Control-Allow-Methods', 'GET, OPTIONS')
+                // response.set('Access-Control-Allow-Headers', 'Content-Type')
+                return response.json(data);
             case 2:
                 return {
                     code:600,
@@ -78,7 +100,7 @@ password);
     }
 
     @Post("/register")
-    async createUser(@Body() body: IUser): Promise<any> {
+    async createUser(@Body() body: IUser,@Res({passthrough:true}) response:Response): Promise<any> {
         try{
 
             const {username,email,password,rePassword,name,psnUsername,psnDisplayName,isPrivate=true} = body;
@@ -98,17 +120,20 @@ password);
             }
             const salt = makeSalt();
             const token  = await encryptPassword(password,salt);
-            console.log(token);
             const res =  await this.userService.createUser({username,email,userToken:token,salt,name,isPrivate})
             const {id,...rest} = res;
             if(psnUsername){
               await this.psnuserService.createUser({userId: id,username:psnUsername,displayName:psnDisplayName})
             }
             // await this.psnuserService.createUser({userId: id,username:psnUsername,displayName:psnDisplayName})
-            return {                        email : res.email,
+            const authResult = await this.authService.validateUser(username,password);
+            response.cookie("user_token",authResult.token);
+            return {
+              email : res.email,
               username : res.username,
               displayName : res.name,
-              isPrivate : res.isPrivate};
+              isPrivate : res.isPrivate
+            };
           }catch(err){
             console.log(err);
             throw new Error(err);

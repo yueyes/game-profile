@@ -64,7 +64,7 @@ const RegisterModal = ({setCurrentMode}:IModalProps) =>{
 
     return (
         <>
-                        <div style={{textAlign:"center"}}>
+                <div style={{textAlign:"center"}}>
                     <Avatar style={avatarStyle}><LockOutlined /></Avatar>
                     <h2 style={{marginTop : "5px"}}>Sign Up</h2>
                 </div>

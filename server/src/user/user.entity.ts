@@ -1,7 +1,7 @@
 import { Psnuser } from '@server/psnuser/psnuser.entity';
 import {Entity,Column,PrimaryGeneratedColumn, Index, OneToMany, Raw} from 'typeorm';
 
-@Entity()
+@Entity({name:'user'})
 @Index('user_email_uindex', ['email'], {unique: true})
 @Index('user_username_uindex', ['username'], {unique: true})
 export class User{

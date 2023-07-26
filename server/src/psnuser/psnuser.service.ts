@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Entity, Repository } from 'typeorm';
 import { Psnuser } from './psnuser.entity';
 
 @Injectable()
-
 export class PsnuserService {
     constructor(
         @InjectRepository(Psnuser)

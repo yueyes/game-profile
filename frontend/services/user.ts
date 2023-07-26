@@ -22,3 +22,5 @@ interface IRegisterParams{
 }
 
 export const userRegister = async (data:IRegisterParams) => instance.post("/user/register",data);
+
+export const getUserMe = async() => instance.get("/user/me");
